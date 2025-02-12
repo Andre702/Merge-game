@@ -8,7 +8,7 @@ public class TileBlock : MonoBehaviour
     {
         if (highlight == true)
         {
-            sprite.color = Color.gray;
+            sprite.color = new Color(0.92f, 0.92f, 0.92f, 1f);
         }
         else
         {
