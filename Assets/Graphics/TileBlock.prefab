@@ -204,7 +204,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7787249110635490367}
-  - component: {fileID: 338790588661489385}
   m_Layer: 0
   m_Name: TileBlock
   m_TagString: Untagged
@@ -229,16 +228,3 @@ Transform:
   - {fileID: 4831837706050586578}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &338790588661489385
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9009757731416003161}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8615ea321ea83f14fab1bde6dfa07ccf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sprite: {fileID: 3894392854975788358}

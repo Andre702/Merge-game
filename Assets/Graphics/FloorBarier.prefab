@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &3045334399862932798
+--- !u!1001 &4729354928983941436
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -9,28 +9,44 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 3894392854975788358, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
+      propertyPath: m_Size.x
+      value: 1.483871
+      objectReference: {fileID: 0}
+    - target: {fileID: 3894392854975788358, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 0304d3b9178270840aca02d0ca8f94d9, type: 3}
+      objectReference: {fileID: 21300000, guid: 4667e1f17a915ac46879e7df2b666408, type: 3}
+    - target: {fileID: 3894392854975788358, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4831837706050586578, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 4831837706050586578, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 7174222069993117931, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 7174222069993117931, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4831837706050586578, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.05
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 7174222069993117931, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.343
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 7174222069993117931, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.475
+    - target: {fileID: 7787249110635490367, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 7174222069993117931, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.343
+    - target: {fileID: 7787249110635490367, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7787249110635490367, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -74,7 +90,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9009757731416003161, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
       propertyPath: m_Name
-      value: GrassBlock
+      value: FloorBarier
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 338790588661489385, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
@@ -83,29 +99,29 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 9009757731416003161, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5877063322280723453}
+      addedObject: {fileID: 971039243298167406}
   m_SourcePrefab: {fileID: 100100000, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
---- !u!212 &2038048342583095416 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 3894392854975788358, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
-  m_PrefabInstance: {fileID: 3045334399862932798}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6289880974079219559 stripped
+--- !u!1 &4371620487524381541 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9009757731416003161, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
-  m_PrefabInstance: {fileID: 3045334399862932798}
+  m_PrefabInstance: {fileID: 4729354928983941436}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5877063322280723453
+--- !u!114 &971039243298167406
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6289880974079219559}
+  m_GameObject: {fileID: 4371620487524381541}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c91c55949691de46bce08734b74357e, type: 3}
+  m_Script: {fileID: 11500000, guid: 43755c930607a4844adfd371bf839e4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprite: {fileID: 2038048342583095416}
+  sprite: {fileID: 8622602092826203258}
   isSolid: 1
+--- !u!212 &8622602092826203258 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3894392854975788358, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
+  m_PrefabInstance: {fileID: 4729354928983941436}
+  m_PrefabAsset: {fileID: 0}

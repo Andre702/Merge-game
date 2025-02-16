@@ -8,6 +8,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 338790588661489385, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
+      propertyPath: isSolid
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 338790588661489385, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
+      propertyPath: isFullBlock
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3894392854975788358, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -26,7 +34,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4831837706050586578, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.333
+      value: 0.265
+      objectReference: {fileID: 0}
+    - target: {fileID: 7174222069993117931, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7787249110635490367, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -72,8 +84,35 @@ PrefabInstance:
       propertyPath: m_Name
       value: LongGrassTile
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 338790588661489385, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 9009757731416003161, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 68562806775537743}
   m_SourcePrefab: {fileID: 100100000, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
+--- !u!1 &4044250784716089685 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9009757731416003161, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
+  m_PrefabInstance: {fileID: 4983521345497840396}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &68562806775537743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4044250784716089685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66d12ab0eaeb7cf49b29196a50649e06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 8296386881388482122}
+--- !u!212 &8296386881388482122 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3894392854975788358, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
+  m_PrefabInstance: {fileID: 4983521345497840396}
+  m_PrefabAsset: {fileID: 0}
