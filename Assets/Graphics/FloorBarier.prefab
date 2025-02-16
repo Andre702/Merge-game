@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2048544105805539629, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3894392854975788358, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
       propertyPath: m_Size.x
       value: 1.483871
@@ -119,7 +123,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprite: {fileID: 8622602092826203258}
-  isSolid: 1
 --- !u!212 &8622602092826203258 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 3894392854975788358, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}

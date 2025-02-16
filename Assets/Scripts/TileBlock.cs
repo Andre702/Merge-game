@@ -1,6 +1,14 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+public enum TileType
+{
+    UNLABELED,
+    ShortGrass,
+    TallGrass,
+    SmallStone
+}
+
 public abstract class TileBlock : MonoBehaviour
 {
     public SpriteRenderer sprite;
@@ -8,6 +16,8 @@ public abstract class TileBlock : MonoBehaviour
 
     private bool isPickedUp = false;
     private float pickupHeight = 1f;
+
+    public TileType type;
 
     public void Highlight(bool highlight)
     {

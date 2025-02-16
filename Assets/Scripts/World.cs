@@ -99,13 +99,31 @@ public class World : MonoBehaviour
                     {
                         if (canBeMerged)
                         {
-                            // merge
+
+                            List<Vector3Int> tilesToBeMerged = EvaluateMergeTiles(placeLayer, placePosition.Value, GetTileComponent(placeLayer, placePosition.Value), true);
+
+                            if (tilesToBeMerged == null)
+                            {
+                                pickedUpLayer.SetTile(pickedUpLayer.WorldToCell(pickedUpOGPosition), pickedUpTileBase);
+
+                                pickedUpTileComponent = null;
+                                pickedUpTileBase = null;
+                                return;
+                            }
+
+                            if (MergeTiles(placeLayer, tilesToBeMerged, true) >= 0)
+                            {
+                                Debug.Log($"TIles Meged at: {placePosition.Value} with rest == {MergeTiles(placeLayer, tilesToBeMerged, true)}");
+
+                                pickedUpTileComponent = null;
+                                pickedUpTileBase = null;
+                                return;
+                            }
+
+                            // do animation
 
                             // update here?
 
-                            pickedUpTileComponent = null;
-                            pickedUpTileBase = null;
-                            return;
                         }
 
                         // update here?
@@ -202,6 +220,94 @@ public class World : MonoBehaviour
         }
         return null;
         
+    }
+
+    List<Vector3Int> EvaluateMergeTiles(Tilemap tilemap, Vector3Int origin, TileBlock startTile, bool additionalDrop)
+    {
+        var targetType = startTile.type;
+        List<Vector3Int> mergeGroup = new List<Vector3Int>();
+        HashSet<Vector3Int> visited = new HashSet<Vector3Int>();
+        Queue<Vector3Int> queue = new Queue<Vector3Int>();
+
+        queue.Enqueue(origin);
+        visited.Add(origin);
+
+        Vector3Int[] directions = new Vector3Int[]
+        {
+        new Vector3Int(1, 0, 0),
+        new Vector3Int(-1, 0, 0),
+        new Vector3Int(0, 1, 0),
+        new Vector3Int(0, -1, 0)
+        };
+
+        while (queue.Count > 0)
+        {
+            Vector3Int current = queue.Dequeue();
+            mergeGroup.Add(current);
+
+            foreach (var dir in directions)
+            {
+                Vector3Int neighbor = current + dir;
+                if (visited.Contains(neighbor))
+                    continue;
+
+                TileBlock neighborTile = GetTileComponent(tilemap, neighbor);
+                if (neighborTile != null && neighborTile.type == targetType)
+                {
+                    visited.Add(neighbor);
+                    queue.Enqueue(neighbor);
+                }
+            }
+        }
+
+        if (additionalDrop)
+        {
+            return (mergeGroup.Count >= 2) ? mergeGroup : null;
+        }
+        else
+        {
+            return (mergeGroup.Count >= 3) ? mergeGroup : null;
+        }       
+    }
+
+    // Merges the group of tiles by deleting them and placing new merged tiles.
+    // For each group of three tiles, one new tile is placed. Leftover tiles are returned as an int.
+    public static int MergeTiles(Tilemap tilemap, List<Vector3Int> mergeGroup, bool additionalDrop)
+    {
+        if (mergeGroup == null)
+            return 0;
+
+        int groups = (mergeGroup.Count + (additionalDrop ? 1 : 0)) / 3;
+        int remainder = (mergeGroup.Count + (additionalDrop ? 1 : 0)) % 3;
+
+        // Get the base tile from the origin (first position in the group)
+        Vector3Int origin = mergeGroup[0];
+
+        TileBase baseTile = tilemap.GetTile(origin);
+        if (baseTile == null)
+            return remainder;
+
+        // Lookup the new tile from the GameManager merge progression dictionary.
+        TileBase newTile;
+        if (GameManager.Instance.mergeProgression.ContainsKey(baseTile))
+            newTile = GameManager.Instance.mergeProgression[baseTile];
+        else
+            return -1;
+
+        // Delete all tiles in the merge group.
+        foreach (Vector3Int pos in mergeGroup)
+        {
+            tilemap.SetTile(pos, null);
+        }
+
+        // Place one new merged tile for every full group of three, using positions from mergeGroup.
+        for (int i = 0; i < groups; i++)
+        {
+            Vector3Int placementPos = mergeGroup[i]; // Use positions from the list
+            tilemap.SetTile(placementPos, newTile);
+        }
+
+        return remainder;
     }
 
     bool CanBreakTile(Tilemap tilemap, Vector3Int position, int layerIndex)

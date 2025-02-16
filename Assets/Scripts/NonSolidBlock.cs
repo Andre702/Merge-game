@@ -7,10 +7,10 @@ public class NonSolidBlock : TileBlock
 
     public override (bool canBePlaced, bool canBeMerged, Tilemap level, Vector3Int? position) PlaceVerify(Vector3Int selectedTile, Vector3 hitNormal, Tilemap selectedLayer, Tilemap aboveLayer = null)
     {
-        if (!World.GetTileComponent(selectedLayer, selectedTile).IsSolid /*& can be merged with the tile held in cursor*/ )
+        TileBlock target = World.GetTileComponent(selectedLayer, selectedTile);
+        if (!target.IsSolid & target.type == this.type)
         {
-            // merge
-            //return (true, true);
+            return (true, true, selectedLayer, selectedTile);
         }
 
         Vector3Int? placePosition = null;

@@ -111,7 +111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprite: {fileID: 4889282314849158946}
-  isSolid: 0
+  type: 1
 --- !u!212 &4889282314849158946 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 3894392854975788358, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}

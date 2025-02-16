@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9d1514134bc4fbd41bb739b1b9a49231, type: 3}
-  m_Name: ShortGrass
+  m_Name: GrassShort
   m_EditorClassIdentifier: 
   m_DefaultSprite: {fileID: 0}
   m_DefaultGameObject: {fileID: 637407903932276797, guid: aa21c764c236830488222913d72996e8, type: 3}

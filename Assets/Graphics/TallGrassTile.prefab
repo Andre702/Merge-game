@@ -82,7 +82,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9009757731416003161, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
       propertyPath: m_Name
-      value: LongGrassTile
+      value: TallGrassTile
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 338790588661489385, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
@@ -111,6 +111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprite: {fileID: 8296386881388482122}
+  type: 2
 --- !u!212 &8296386881388482122 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 3894392854975788358, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
