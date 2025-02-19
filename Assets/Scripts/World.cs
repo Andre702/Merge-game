@@ -43,11 +43,30 @@ public class World : MonoBehaviour
         {
             TileHoverOrPickUp(hit);
 
+            // SPAWN TILES --------------------------
+            if (Input.GetMouseButtonUp(1))
+            {
+                Tilemap aboveLayer;
+                try
+                {
+                    aboveLayer = worldLayers[aimedLayerIndex + 1];
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    // either add a new layer or just prevent the action
+                    return;
+                }
+                Tilemap baseLayer = worldLayers[aimedLayerIndex];
+                Vector3Int target = baseLayer.WorldToCell(hit.point);
+                int tilesSpawned = SpawnTilesFromBlockRandomized(target, baseLayer, aboveLayer, 9, 6);
+            }
+
             if (pickedUpTileComponent != null)
             {
                 //placementIndicator.position = targetLayer.GetCellCenterWorld(tilePosition);
                 Vector3 normal = hit.normal;
 
+                // PICK UP ------------------------------
                 if (Input.GetMouseButtonUp(0))
                 {
                     Tilemap selectedLayer = worldLayers[aimedLayerIndex];
@@ -104,6 +123,7 @@ public class World : MonoBehaviour
 
                             if (tilesToBeMerged == null)
                             {
+                                // cancel merge and placement
                                 pickedUpLayer.SetTile(pickedUpLayer.WorldToCell(pickedUpOGPosition), pickedUpTileBase);
 
                                 pickedUpTileComponent = null;
@@ -113,7 +133,14 @@ public class World : MonoBehaviour
 
                             if (MergeTiles(placeLayer, tilesToBeMerged, true) >= 0)
                             {
-                                Debug.Log($"TIles Meged at: {placePosition.Value} with rest == {MergeTiles(placeLayer, tilesToBeMerged, true)}");
+                                pickedUpTileComponent = null;
+                                pickedUpTileBase = null;
+                                return;
+                            }
+                            else
+                            {
+                                // cancel merge and placement
+                                pickedUpLayer.SetTile(pickedUpLayer.WorldToCell(pickedUpOGPosition), pickedUpTileBase);
 
                                 pickedUpTileComponent = null;
                                 pickedUpTileBase = null;
@@ -148,10 +175,67 @@ public class World : MonoBehaviour
         }
     }
 
+    public int SpawnTilesFromBlockRandomized(Vector3Int origin, Tilemap baseLayer, Tilemap spawnLayer, int maxAttempts, int maxTilesSpawn, int range = 1)
+    {
+        List<Vector3Int> candidates = new List<Vector3Int>();
+        for (int dx = -range; dx <= range; dx++)
+        {
+            for (int dy = -range; dy <= range; dy++)
+            {
+                candidates.Add(new Vector3Int(origin.x + dx, origin.y + dy, origin.z));
+            }
+        }
+        // Shuffle the candidates.
+        for (int i = 0; i < candidates.Count; i++)
+        {
+            int rnd = UnityEngine.Random.Range(i, candidates.Count);
+            Vector3Int temp = candidates[i];
+            candidates[i] = candidates[rnd];
+            candidates[rnd] = temp;
+        }
+
+        int spawned = 0;
+        int attempts = 0;
+
+        foreach (Vector3Int candidatePosition in candidates)
+        {
+            if (attempts >= maxAttempts || spawned >= maxTilesSpawn)
+                break;
+
+            attempts++;
+
+            if (baseLayer.HasTile(candidatePosition) && !spawnLayer.HasTile(candidatePosition))
+            {
+                TileBlock tile = GetTileComponent(baseLayer, candidatePosition);
+                try
+                {
+                    
+                }
+                catch(InvalidCastException e)
+                {
+                    continue;
+                }
+
+                SolidBlock block = tile as SolidBlock;
+                if (block != null)
+                {
+                    TileBase spawnTile = block.SpawnTile();
+                    if (spawnTile != null)
+                    {
+                        spawnLayer.SetTile(candidatePosition, spawnTile);
+                        spawned++;
+                    }
+                }
+            }
+        }
+
+        return spawned;
+    }
+
     void TileHoverOrPickUp(RaycastHit raycastHit)
     {
         //aimedLayerIndex = GetLayerIndex(hit.point.y);
-        aimedLayerIndex = GetLayerIndex(raycastHit.transform.position.y);
+        aimedLayerIndex = GetLayerIndex(raycastHit.transform.parent.position.y + 0.4f);
 
         if (aimedLayerIndex >= 0 && aimedLayerIndex < worldLayers.Count)
         {
@@ -166,7 +250,9 @@ public class World : MonoBehaviour
             }
             else
             {
-                tilePosition = targetLayer.WorldToCell(raycastHit.transform.position);
+                Transform parent = raycastHit.transform.parent;
+                Vector3Int anchor = targetLayer.WorldToCell(raycastHit.transform.parent.position);
+                tilePosition = new (anchor.x, anchor.y, 0);
             }
 
             TileBlock tileComponent = GetTileComponent(targetLayer, tilePosition);

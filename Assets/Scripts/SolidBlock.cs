@@ -1,8 +1,18 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class SolidBlock : TileBlock
 {
+    [System.Serializable] public class TileChance
+    {
+        public TileBase tile;
+        public float chanceMod;
+    }
+
+    public List<TileChance> possibleTileSpawns;
+
     public override bool IsSolid => true;
 
     public override (bool canBePlaced, bool canBeMerged, Tilemap level, Vector3Int? position) PlaceVerify(Vector3Int selectedTile, Vector3 hitNormal, Tilemap selectedLayer, Tilemap aboveLayer = null)
@@ -51,6 +61,36 @@ public class SolidBlock : TileBlock
             return (true, false, aboveLayer, selectedTile);
         }
         return (false, false, null, null);
+    }
+
+    
+
+    public TileBase SpawnTile()
+    {
+        if (possibleTileSpawns == null || possibleTileSpawns.Count == 0)
+            return null; // No possible tiles to spawn.
+
+        // Calculate total weight.
+        float totalWeight = possibleTileSpawns.Sum(entry => entry.chanceMod);
+
+        if (totalWeight <= 0)
+        {
+            Debug.LogWarning("possibleTileSpawns has members to spawn but their total weight is equal 0!");
+            return null; // No valid spawn chances.
+        }
+            
+        float randomValue = Random.Range(0, totalWeight);
+
+        // Pick the tile based on weighted probabilities.
+        float cumulativeWeight = 0;
+        foreach (var entry in possibleTileSpawns)
+        {
+            cumulativeWeight += entry.chanceMod;
+            if (randomValue <= cumulativeWeight)
+                return entry.tile;
+        }
+
+        return null; // Fallback (should never reach here)
     }
 
     public override bool UpdateTile()

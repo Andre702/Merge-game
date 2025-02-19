@@ -16,3 +16,9 @@ MonoBehaviour:
   mergePairs:
   - currentItem: {fileID: 11400000, guid: 24e9ad4341c893d459a017a1127e0a7d, type: 2}
     nextItem: {fileID: 11400000, guid: f08af7d70e2a5b5498d261c738998a88, type: 2}
+  - currentItem: {fileID: 11400000, guid: f08af7d70e2a5b5498d261c738998a88, type: 2}
+    nextItem: {fileID: 11400000, guid: 653f8271367754b4f98b9c35ad340ffc, type: 2}
+  - currentItem: {fileID: 11400000, guid: 653f8271367754b4f98b9c35ad340ffc, type: 2}
+    nextItem: {fileID: 11400000, guid: 733a38aea9b804847b6e50c8fde15d55, type: 2}
+  - currentItem: {fileID: 11400000, guid: 733a38aea9b804847b6e50c8fde15d55, type: 2}
+    nextItem: {fileID: 11400000, guid: 76165bf594648d64e916bafb7b174b77, type: 2}

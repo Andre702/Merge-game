@@ -6,7 +6,11 @@ public enum TileType
     UNLABELED,
     ShortGrass,
     TallGrass,
-    SmallStone
+    SmallStone,
+    SmallBush,
+    BigBush,
+    SmallTree,
+    BigTree
 }
 
 public abstract class TileBlock : MonoBehaviour
