@@ -10,9 +10,9 @@ public class World : MonoBehaviour
     [SerializeField] public List<Tilemap> worldLayers;
 
     public TileBase floorBlock;
+    public bool GatherMode = false;
 
     private Transform placementIndicator;
-
 
     private const float C1 = 0.02f;
     private const float C2 = 0.001f;
@@ -24,7 +24,8 @@ public class World : MonoBehaviour
     private int pickedUpLayerIndex = -1;
 
     private int aimedLayerIndex = -1;
-
+    private Vector3Int targetPosition;
+    private TileBlock targetComponent;
 
     private void Start()
     {
@@ -41,7 +42,29 @@ public class World : MonoBehaviour
     {
         if (Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out RaycastHit hit))
         {
-            TileHoverOrPickUp(hit);
+            TileHover(hit);
+
+            TileBlock tileComponent = GetTileComponent(worldLayers[aimedLayerIndex], targetPosition);
+
+            // Pick UP TILES --------------------------
+            if (Input.GetMouseButtonDown(0) && tileComponent != null)
+            {
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    TileBlock aboveTileComponent = null;
+                    if (aimedLayerIndex < worldLayers.Count - 1)
+                    {
+                        aboveTileComponent = GetTileComponent(worldLayers[aimedLayerIndex + 1], targetPosition);
+                    }
+                    
+                    TileHarvest(tileComponent, aboveTileComponent);
+                }
+                else
+                {
+                    TilePickUp(tileComponent);
+                }
+                
+            }
 
             // SPAWN TILES --------------------------
             if (Input.GetMouseButtonUp(1))
@@ -58,115 +81,24 @@ public class World : MonoBehaviour
                 }
                 Tilemap baseLayer = worldLayers[aimedLayerIndex];
                 Vector3Int target = baseLayer.WorldToCell(hit.point);
-                int tilesSpawned = SpawnTilesFromBlockRandomized(target, baseLayer, aboveLayer, 9, 6);
+                int tilesSpawned = TilesSpawnRandomized(target, baseLayer, aboveLayer, 9, 6);
             }
 
             if (pickedUpTileComponent != null)
             {
                 //placementIndicator.position = targetLayer.GetCellCenterWorld(tilePosition);
-                Vector3 normal = hit.normal;
+                
 
-                // PICK UP ------------------------------
+                // DROP TILE ------------------------------
                 if (Input.GetMouseButtonUp(0))
                 {
-                    Tilemap selectedLayer = worldLayers[aimedLayerIndex];
-                    Tilemap pickedUpLayer = worldLayers[pickedUpLayerIndex];
-
-                    pickedUpTileComponent.Release();
-                    pickedUpLayer.SetTile(pickedUpLayer.WorldToCell(pickedUpOGPosition), null);
-
-                    Tilemap aboveLayer;
-                    try
-                    {
-                        aboveLayer = worldLayers[aimedLayerIndex + 1];
-                    }
-                    catch (ArgumentOutOfRangeException)
-                    {
-                        // either add a new layer or just prevent the action
-                        aboveLayer = null;
-                    }
-
-                    bool canBePlaced;
-                    bool canBeMerged;
-                    Tilemap placeLayer; 
-                    Vector3Int? placePosition;
-
-                    Vector3Int pointedTilePosition;
-
-                    if (aimedLayerIndex == 0)
-                    {
-                        pointedTilePosition = selectedLayer.WorldToCell(hit.point);
-                        (canBePlaced, canBeMerged, placeLayer, placePosition) =
-                        pickedUpTileComponent.PlaceVerify(pointedTilePosition, normal, aboveLayer); // This should be executed at all times for the tile indicator to position itself correctly
-                    }
-                    else
-                    {
-                        pointedTilePosition = selectedLayer.WorldToCell(hit.transform.position);
-                        (canBePlaced, canBeMerged, placeLayer, placePosition) =
-                        pickedUpTileComponent.PlaceVerify(pointedTilePosition, normal, selectedLayer, aboveLayer); // This should be executed at all times for the tile indicator to position itself correctly
-                    }
-
-                    if (!canBePlaced)
-                    {
-                        pickedUpLayer.SetTile(pickedUpLayer.WorldToCell(pickedUpOGPosition), pickedUpTileBase);
-
-                        pickedUpTileComponent = null;
-                        pickedUpTileBase = null;
-                        return;
-                    }
-                    else
-                    {
-                        if (canBeMerged)
-                        {
-
-                            List<Vector3Int> tilesToBeMerged = EvaluateMergeTiles(placeLayer, placePosition.Value, GetTileComponent(placeLayer, placePosition.Value), true);
-
-                            if (tilesToBeMerged == null)
-                            {
-                                // cancel merge and placement
-                                pickedUpLayer.SetTile(pickedUpLayer.WorldToCell(pickedUpOGPosition), pickedUpTileBase);
-
-                                pickedUpTileComponent = null;
-                                pickedUpTileBase = null;
-                                return;
-                            }
-
-                            if (MergeTiles(placeLayer, tilesToBeMerged, true) >= 0)
-                            {
-                                pickedUpTileComponent = null;
-                                pickedUpTileBase = null;
-                                return;
-                            }
-                            else
-                            {
-                                // cancel merge and placement
-                                pickedUpLayer.SetTile(pickedUpLayer.WorldToCell(pickedUpOGPosition), pickedUpTileBase);
-
-                                pickedUpTileComponent = null;
-                                pickedUpTileBase = null;
-                                return;
-                            }
-
-                            // do animation
-
-                            // update here?
-
-                        }
-
-                        // update here?
-                        placeLayer.SetTile(placePosition.Value, pickedUpTileBase);
-
-                        pickedUpTileComponent = null;
-                        pickedUpTileBase = null;
-                        return;
-                    }
-
-                    //placementIndicator.gameObject.SetActive(false);
+                    TileDrop(hit);
                 }
             }
         }
-        else
+        else // cursor not pointing at enything. (this generally should not happend since the floor is just so wide)
         {
+            Debug.LogWarning("Cursor out of bounds!");
             if (pickedUpTileComponent != null)
             {
                 pickedUpTileComponent.Release();
@@ -175,7 +107,155 @@ public class World : MonoBehaviour
         }
     }
 
-    public int SpawnTilesFromBlockRandomized(Vector3Int origin, Tilemap baseLayer, Tilemap spawnLayer, int maxAttempts, int maxTilesSpawn, int range = 1)
+    
+
+    void TileHover(RaycastHit raycastHit)
+    {
+        //aimedLayerIndex = GetLayerIndex(hit.point.y);
+        aimedLayerIndex = GetLayerIndex(raycastHit.transform.parent.position.y + 0.4f);
+
+        if (aimedLayerIndex >= 0 && aimedLayerIndex < worldLayers.Count)
+        {
+            //Debug.Log($"Pointing at layer: {aimedLayerIndex}");
+
+            if (aimedLayerIndex == 0)
+            {
+                targetPosition = worldLayers[aimedLayerIndex].WorldToCell(raycastHit.point);
+            }
+            else
+            {
+                Vector3Int anchor = worldLayers[aimedLayerIndex].WorldToCell(raycastHit.transform.parent.position);
+                targetPosition = new (anchor.x, anchor.y, 0);
+            }
+
+            TileBlock tileComponent = GetTileComponent(worldLayers[aimedLayerIndex], targetPosition);
+
+            HighlightTile(tileComponent);
+        }
+    }
+
+    void TilePickUp(TileBlock tile)
+    {
+        if (tile.IsSolid & aimedLayerIndex < worldLayers.Count - 1)
+        {
+            // solid blocks can not be picked up from underneeth any other tiles
+            if (GetTileComponent(worldLayers[aimedLayerIndex + 1], targetPosition) != null) { return; }
+        }
+
+        pickedUpTileComponent = tile;
+
+        if (pickedUpTileComponent.PickUp())
+        {
+            pickedUpOGPosition = tile.transform.position;
+            pickedUpTileBase = worldLayers[aimedLayerIndex].GetTile(targetPosition);
+            pickedUpLayerIndex = aimedLayerIndex;
+        }
+        else
+        {
+            pickedUpTileComponent = null;
+            pickedUpTileBase = null;
+        }
+    }
+
+    void TileDrop(RaycastHit hit)
+    {
+        Vector3 normal = hit.normal;
+        Tilemap selectedLayer = worldLayers[aimedLayerIndex];
+        Tilemap pickedUpLayer = worldLayers[pickedUpLayerIndex];
+
+        pickedUpTileComponent.Release();
+        pickedUpLayer.SetTile(pickedUpLayer.WorldToCell(pickedUpOGPosition), null);
+
+        Tilemap aboveLayer;
+        try
+        {
+            aboveLayer = worldLayers[aimedLayerIndex + 1];
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            // either add a new layer or just prevent the action
+            aboveLayer = null;
+        }
+
+        bool canBePlaced;
+        bool canBeMerged;
+        Tilemap placeLayer;
+        Vector3Int? placePosition;
+
+        Vector3Int pointedTilePosition;
+
+        if (aimedLayerIndex == 0)
+        {
+            pointedTilePosition = selectedLayer.WorldToCell(hit.point);
+            (canBePlaced, canBeMerged, placeLayer, placePosition) =
+            pickedUpTileComponent.PlaceVerify(pointedTilePosition, normal, aboveLayer); // This should be executed at all times for the tile indicator to position itself correctly
+        }
+        else
+        {
+            pointedTilePosition = selectedLayer.WorldToCell(hit.transform.position);
+            (canBePlaced, canBeMerged, placeLayer, placePosition) =
+            pickedUpTileComponent.PlaceVerify(pointedTilePosition, normal, selectedLayer, aboveLayer); // This should be executed at all times for the tile indicator to position itself correctly
+        }
+
+        if (!canBePlaced)
+        {
+            pickedUpLayer.SetTile(pickedUpLayer.WorldToCell(pickedUpOGPosition), pickedUpTileBase);
+
+            pickedUpTileComponent = null;
+            pickedUpTileBase = null;
+            return;
+        }
+        else
+        {
+            if (canBeMerged)
+            {
+
+                List<Vector3Int> tilesToBeMerged = EvaluateMergeTiles(placeLayer, placePosition.Value, GetTileComponent(placeLayer, placePosition.Value), true);
+
+                if (tilesToBeMerged == null)
+                {
+                    // cancel merge and placement
+                    pickedUpLayer.SetTile(pickedUpLayer.WorldToCell(pickedUpOGPosition), pickedUpTileBase);
+
+                    pickedUpTileComponent = null;
+                    pickedUpTileBase = null;
+                    return;
+                }
+
+                if (MergeTiles(placeLayer, tilesToBeMerged, true) >= 0)
+                {
+                    pickedUpTileComponent = null;
+                    pickedUpTileBase = null;
+                    return;
+                }
+                else
+                {
+                    // cancel merge and placement
+                    pickedUpLayer.SetTile(pickedUpLayer.WorldToCell(pickedUpOGPosition), pickedUpTileBase);
+
+                    pickedUpTileComponent = null;
+                    pickedUpTileBase = null;
+                    return;
+                }
+
+                // do animation
+
+                // update here?
+
+            }
+
+            // update here?
+            placeLayer.SetTile(placePosition.Value, pickedUpTileBase);
+
+            pickedUpTileComponent = null;
+            pickedUpTileBase = null;
+            return;
+        }
+
+        //placementIndicator.gameObject.SetActive(false);
+    }
+
+    int TilesSpawnRandomized(Vector3Int origin, Tilemap baseLayer, Tilemap spawnLayer, int maxAttempts, int maxTilesSpawn, int range = 1)
     {
         List<Vector3Int> candidates = new List<Vector3Int>();
         for (int dx = -range; dx <= range; dx++)
@@ -207,15 +287,6 @@ public class World : MonoBehaviour
             if (baseLayer.HasTile(candidatePosition) && !spawnLayer.HasTile(candidatePosition))
             {
                 TileBlock tile = GetTileComponent(baseLayer, candidatePosition);
-                try
-                {
-                    
-                }
-                catch(InvalidCastException e)
-                {
-                    continue;
-                }
-
                 SolidBlock block = tile as SolidBlock;
                 if (block != null)
                 {
@@ -232,81 +303,24 @@ public class World : MonoBehaviour
         return spawned;
     }
 
-    void TileHoverOrPickUp(RaycastHit raycastHit)
+    void TileHarvest(TileBlock tile, TileBlock aboveTile)
     {
-        //aimedLayerIndex = GetLayerIndex(hit.point.y);
-        aimedLayerIndex = GetLayerIndex(raycastHit.transform.parent.position.y + 0.4f);
-
-        if (aimedLayerIndex >= 0 && aimedLayerIndex < worldLayers.Count)
+        NonSolidBlock target = tile as NonSolidBlock;
+        if (target != null)
         {
-            //Debug.Log($"Pointing at layer: {aimedLayerIndex}");
-
-            Tilemap targetLayer = worldLayers[aimedLayerIndex];
-            Vector3Int tilePosition;
-
-            if (aimedLayerIndex == 0)
-            {
-                tilePosition = targetLayer.WorldToCell(raycastHit.point);
-            }
-            else
-            {
-                Transform parent = raycastHit.transform.parent;
-                Vector3Int anchor = targetLayer.WorldToCell(raycastHit.transform.parent.position);
-                tilePosition = new (anchor.x, anchor.y, 0);
-            }
-
-            TileBlock tileComponent = GetTileComponent(targetLayer, tilePosition);
-
-            HighlightTile(tileComponent);
-
-            if (Input.GetMouseButtonDown(0) && tileComponent != null)
-            {
-                if (tileComponent.IsSolid & aimedLayerIndex < worldLayers.Count - 1)
-                {
-                    // solid blocks can not be picked up from underneeth any other tiles
-                    if (GetTileComponent(worldLayers[aimedLayerIndex + 1], tilePosition) != null) { return; }
-                }
-
-                pickedUpTileComponent = tileComponent;
-
-                if (pickedUpTileComponent.PickUp())
-                {
-                    pickedUpOGPosition = tileComponent.transform.position;
-                    pickedUpTileBase = targetLayer.GetTile(tilePosition);
-                    pickedUpLayerIndex = aimedLayerIndex;
-                }
-                else
-                {
-                    pickedUpTileComponent = null;
-                    pickedUpTileBase = null;
-                }
-            }
+            (ItemType item, int amount) = target.GetItems(0, 0);
+            //Debug.Log($"A {target.type} dropped: {amount} of {item}");
+            GameManager.Instance.inventory.Add(item, amount);
+            GameManager.Instance.inventory.PrintInventory();
+        }
+        else if (aboveTile == null)
+        {
+            GameManager.Instance.inventory.Add(tile.type, 1);
+            Destroy(tile.gameObject);
+            GameManager.Instance.inventory.PrintInventory();
         }
     }
 
-    int GetLayerIndex(float yPosition)
-    {
-        for (int i = 0; i < worldLayers.Count; i++)
-        {
-            float layerY = worldLayers[i].transform.position.y;
-            if (yPosition >= layerY + C1 && yPosition <= layerY + 0.5f + C2)
-            {
-                return i;
-            }
-        }
-        return 0;
-    }
-
-    Tilemap GetLayer(Vector3 position, int yMod = 0)
-    {
-        int index = GetLayerIndex(position.y);
-        if (index >= 0)
-        {
-            return worldLayers[index + yMod];
-        }
-        return null;
-        
-    }
 
     List<Vector3Int> EvaluateMergeTiles(Tilemap tilemap, Vector3Int origin, TileBlock startTile, bool additionalDrop)
     {
@@ -353,11 +367,8 @@ public class World : MonoBehaviour
         else
         {
             return (mergeGroup.Count >= 3) ? mergeGroup : null;
-        }       
+        }
     }
-
-    // Merges the group of tiles by deleting them and placing new merged tiles.
-    // For each group of three tiles, one new tile is placed. Leftover tiles are returned as an int.
     public static int MergeTiles(Tilemap tilemap, List<Vector3Int> mergeGroup, bool additionalDrop)
     {
         if (mergeGroup == null)
@@ -396,6 +407,20 @@ public class World : MonoBehaviour
         return remainder;
     }
 
+    int GetLayerIndex(float yPosition)
+    {
+        for (int i = 0; i < worldLayers.Count; i++)
+        {
+            float layerY = worldLayers[i].transform.position.y;
+            if (yPosition >= layerY + C1 && yPosition <= layerY + 0.5f + C2)
+            {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    
     bool CanBreakTile(Tilemap tilemap, Vector3Int position, int layerIndex)
     {
         if (tilemap.GetTile(position) == null) { return false; } // No tile to break

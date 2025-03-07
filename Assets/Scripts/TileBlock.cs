@@ -4,6 +4,11 @@ using UnityEngine.Tilemaps;
 public enum TileType
 {
     UNLABELED,
+
+    GrassBlock,
+    DirtBlock,
+    HeyRoofL,
+
     ShortGrass,
     TallGrass,
     SmallStone,
@@ -20,6 +25,8 @@ public abstract class TileBlock : MonoBehaviour
 
     private bool isPickedUp = false;
     private float pickupHeight = 1f;
+    public bool canPlaceOnTop = true;
+
 
     public TileType type;
 

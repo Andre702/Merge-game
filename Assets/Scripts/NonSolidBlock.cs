@@ -1,8 +1,29 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+public enum ItemType
+{
+    None,
+    Grass,
+    Stick,
+    Log,
+    Stone
+}
+
 public class NonSolidBlock : TileBlock
 {
+    [System.Serializable]
+    public class ItemChance
+    {
+        public ItemType item;
+        public int amount;
+        public float chanceWeight;
+    }
+
+    public List<ItemChance> possibleItemDrops;
+
     public override bool IsSolid => false;
 
     public override (bool canBePlaced, bool canBeMerged, Tilemap level, Vector3Int? position) PlaceVerify(Vector3Int selectedTile, Vector3 hitNormal, Tilemap selectedLayer, Tilemap aboveLayer = null)
@@ -18,7 +39,7 @@ public class NonSolidBlock : TileBlock
         {
             if (aboveLayer == null) { return (false, false, null, null); } // if the build limit reached
 
-            if (!World.GetTileComponent(selectedLayer, selectedTile).IsSolid) { return (false, false, null, null); } // if no solid ground beneeth
+            if (!target.IsSolid | !target.canPlaceOnTop) { return (false, false, null, null); } // if no solid ground beneeth
 
             if (aboveLayer.GetTile(selectedTile) != null) { return (false, false, null, null); } // if there is SOMEHOW no space above
 
@@ -44,6 +65,7 @@ public class NonSolidBlock : TileBlock
                 {
                     if (floor.GetTile(placePosition.Value) != null /*& can be merged with the tile held in cursor*/) // (if there is a tile on a floor it must not be solid this was already confirmed in OnFloorSpace)
                     {
+                        return (false, false, null, null);
                         // the floor is not empty and the tile can be merged with the one held in cursor
                         // merge
                         //return (true, true, floor, placePosition);
@@ -62,6 +84,46 @@ public class NonSolidBlock : TileBlock
     public override (bool canBePlaced, bool canBeMerged, Tilemap level, Vector3Int? position) PlaceVerify(Vector3Int selectedTile, Vector3 hitNormal, Tilemap aboveLayer)
     {
         return (false, false, null, null);
+    }
+
+    public (ItemType item, int amount) GetItems(float amountMod, float chanceMod)
+    {
+        if (possibleItemDrops == null || possibleItemDrops.Count < 2)
+        {
+            Debug.LogWarning("No valid items configured for this block.");
+            return (default, 0);
+        }
+
+        // First item (index 0) is always "nothing"
+        float nothingWeight = possibleItemDrops[0].chanceWeight * (1 - chanceMod);
+
+        // Calculate total weight (including "nothing")
+        float totalWeight = possibleItemDrops.Sum(entry => entry.chanceWeight);
+
+        if (totalWeight <= 0)
+        {
+            Debug.LogWarning("possibleItemDrops has members, but total weight is 0!");
+            return (default, 0);
+        }
+
+        // Random number for selection
+        float randomValue = Random.Range(0, totalWeight);
+
+        // Pick an item or return nothing
+        float cumulativeWeight = nothingWeight;
+        if (randomValue <= cumulativeWeight)
+            return (default, 0); // No item drop
+
+        for (int i = 1; i < possibleItemDrops.Count; i++) // Skip index 0 (nothing)
+        {
+            cumulativeWeight += possibleItemDrops[i].chanceWeight;
+            if (randomValue <= cumulativeWeight)
+            {
+                return (possibleItemDrops[i].item, Mathf.RoundToInt(possibleItemDrops[i].amount * 1 + amountMod));
+            }
+        }
+
+        return (default, 0); // Fallback, shouldn't reach
     }
 
     public override bool UpdateTile()
