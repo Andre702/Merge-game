@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9d1514134bc4fbd41bb739b1b9a49231, type: 3}
-  m_Name: GrassTall
+  m_Name: CopperMedium
   m_EditorClassIdentifier: 
   m_DefaultSprite: {fileID: 0}
-  m_DefaultGameObject: {fileID: 4044250784716089685, guid: 58aab53145a4b274ebe59e9f27d0cdea, type: 3}
+  m_DefaultGameObject: {fileID: 3869707408221612280, guid: d826474d364cc824db42a7f167945048, type: 3}
   m_DefaultColliderType: 1
   m_TilingRules: []

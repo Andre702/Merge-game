@@ -113,7 +113,7 @@ MonoBehaviour:
   possibleTileSpawns:
   - tile: {fileID: 11400000, guid: 24e9ad4341c893d459a017a1127e0a7d, type: 2}
     chanceMod: 7
-  - tile: {fileID: 11400000, guid: f08af7d70e2a5b5498d261c738998a88, type: 2}
+  - tile: {fileID: 11400000, guid: 68591bce2f1825c4ba7830813b6453e6, type: 2}
     chanceMod: 2
   - tile: {fileID: 11400000, guid: 01a9a927d7095974ba3bcc36733428d4, type: 2}
     chanceMod: 1

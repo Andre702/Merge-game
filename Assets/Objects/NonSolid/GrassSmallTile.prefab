@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &3801886037553542516
+--- !u!1001 &8489727263947469412
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -8,29 +8,37 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 338790588661489385, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
+      propertyPath: isSolid
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 338790588661489385, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
+      propertyPath: isFullBlock
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 916534004309757484, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3894392854975788358, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 7d911b49dd91b5148ab170c308dcbb86, type: 3}
+      objectReference: {fileID: 21300000, guid: 02f5621f244775547b8b13dfc9f90533, type: 3}
     - target: {fileID: 4831837706050586578, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.55
       objectReference: {fileID: 0}
     - target: {fileID: 4831837706050586578, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.43
+      value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 4831837706050586578, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.55
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4831837706050586578, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.23
-      objectReference: {fileID: 0}
-    - target: {fileID: 4831837706050586578, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 0
+      value: 0.12
       objectReference: {fileID: 0}
     - target: {fileID: 7787249110635490367, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -74,50 +82,49 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9009757731416003161, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
       propertyPath: m_Name
-      value: BushSmall
+      value: GrassShortTile
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 338790588661489385, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 9009757731416003161, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 80089348953332382}
+      addedObject: {fileID: 7735911457006175454}
   m_SourcePrefab: {fileID: 100100000, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
---- !u!212 &200597779675070514 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 3894392854975788358, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
-  m_PrefabInstance: {fileID: 3801886037553542516}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &5317086357544511277 stripped
+--- !u!1 &637407903932276797 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9009757731416003161, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
-  m_PrefabInstance: {fileID: 3801886037553542516}
+  m_PrefabInstance: {fileID: 8489727263947469412}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &80089348953332382
+--- !u!114 &7735911457006175454
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5317086357544511277}
+  m_GameObject: {fileID: 637407903932276797}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66d12ab0eaeb7cf49b29196a50649e06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprite: {fileID: 200597779675070514}
+  sprite: {fileID: 4889282314849158946}
+  canPlaceOnTop: 0
   type: 4
   possibleItemDrops:
   - item: 0
     amount: 0
-    chanceWeight: 3
+    chanceWeight: 5
   - item: 1
     amount: 1
-    chanceWeight: 1
-  - item: 2
-    amount: 1
     chanceWeight: 4
-  - item: 2
+  - item: 1
     amount: 2
     chanceWeight: 1
+--- !u!212 &4889282314849158946 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3894392854975788358, guid: e938c6c0613292c42a654af5c9eee9f3, type: 3}
+  m_PrefabInstance: {fileID: 8489727263947469412}
+  m_PrefabAsset: {fileID: 0}

@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: BushBig
   m_EditorClassIdentifier: 
   m_DefaultSprite: {fileID: 0}
-  m_DefaultGameObject: {fileID: 5988764224580720716, guid: 551bf4c4ff37df34c8db734cac5a55c6, type: 3}
+  m_DefaultGameObject: {fileID: 8630904725895431450, guid: c916fc309b5206c4c96d905a4949f5a1, type: 3}
   m_DefaultColliderType: 1
   m_TilingRules: []

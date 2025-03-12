@@ -15,4 +15,18 @@ MonoBehaviour:
   A: 10
   mergePairs:
   - currentItem: {fileID: 11400000, guid: 01a9a927d7095974ba3bcc36733428d4, type: 2}
-    nextItem: {fileID: 0}
+    nextItem: {fileID: 11400000, guid: 3eb8b5b2f10644544bb1edb9e00fa82b, type: 2}
+  - currentItem: {fileID: 11400000, guid: 3eb8b5b2f10644544bb1edb9e00fa82b, type: 2}
+    nextItem: {fileID: 11400000, guid: f7f56d7a195a94148a51520dfdc2fa74, type: 2}
+  - currentItem: {fileID: 11400000, guid: f7f56d7a195a94148a51520dfdc2fa74, type: 2}
+    nextItem: {fileID: 11400000, guid: f7e643f434f72a046a4cd60933d0ff20, type: 2}
+  - currentItem: {fileID: 11400000, guid: f7e643f434f72a046a4cd60933d0ff20, type: 2}
+    nextItem: {fileID: 11400000, guid: f2f1571303130b848bfe1cfef0a587d6, type: 2}
+  - currentItem: {fileID: 11400000, guid: f2f1571303130b848bfe1cfef0a587d6, type: 2}
+    nextItem: {fileID: 11400000, guid: fb9662b3ae91b194b964cea44f83c162, type: 2}
+  - currentItem: {fileID: 11400000, guid: fb9662b3ae91b194b964cea44f83c162, type: 2}
+    nextItem: {fileID: 11400000, guid: 464c674a0bf900042b7ede125a0040d2, type: 2}
+  - currentItem: {fileID: 11400000, guid: 464c674a0bf900042b7ede125a0040d2, type: 2}
+    nextItem: {fileID: 11400000, guid: 25415f9749263e24f9e3bdcf04b2955a, type: 2}
+  - currentItem: {fileID: 11400000, guid: 25415f9749263e24f9e3bdcf04b2955a, type: 2}
+    nextItem: {fileID: 11400000, guid: 5e58ace60a102cb4ea269dc54f3ecaa6, type: 2}

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9d1514134bc4fbd41bb739b1b9a49231, type: 3}
-  m_Name: GrassShort
+  m_Name: StoneBig
   m_EditorClassIdentifier: 
   m_DefaultSprite: {fileID: 0}
-  m_DefaultGameObject: {fileID: 637407903932276797, guid: aa21c764c236830488222913d72996e8, type: 3}
+  m_DefaultGameObject: {fileID: 8410005140528424984, guid: 76e5cc0db5632dc4e8e6a84a731b97d6, type: 3}
   m_DefaultColliderType: 1
   m_TilingRules: []

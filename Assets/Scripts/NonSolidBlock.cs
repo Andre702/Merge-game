@@ -9,7 +9,11 @@ public enum ItemType
     Grass,
     Stick,
     Log,
-    Stone
+    Stone,
+    BrownCoal,
+    Copper,
+    Mushroom,
+    Silk
 }
 
 public class NonSolidBlock : TileBlock

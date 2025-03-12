@@ -10,12 +10,23 @@ public enum TileType
     HeyRoofL,
 
     ShortGrass,
+    MediumGrass,
     TallGrass,
-    SmallStone,
     SmallBush,
+    MediumBush,
     BigBush,
     SmallTree,
-    BigTree
+    MediumTree,
+    BigTree,
+    SmallStone,
+    MediumStone,
+    BigStone,
+    SmallBrownCoalOre,
+    MediumBrownCoalOre,
+    BigBrownCoalOre,
+    SmallCopperlOre,
+    MediumCopperlOre,
+    BigCopperlOre,
 }
 
 public abstract class TileBlock : MonoBehaviour

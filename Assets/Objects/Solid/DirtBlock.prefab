@@ -88,4 +88,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprite: {fileID: 1724458555816895730}
-  isSolid: 1
+  canPlaceOnTop: 1
+  type: 2
+  possibleTileSpawns: []

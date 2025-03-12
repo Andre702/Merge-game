@@ -108,7 +108,6 @@ public class World : MonoBehaviour
     }
 
     
-
     void TileHover(RaycastHit raycastHit)
     {
         //aimedLayerIndex = GetLayerIndex(hit.point.y);

@@ -88,5 +88,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite: {fileID: 3484555393072105583}
   canPlaceOnTop: 0
-  type: 3
+  type: 6
   possibleTileSpawns: []
