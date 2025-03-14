@@ -57,7 +57,7 @@ public class World : MonoBehaviour
                         aboveTileComponent = GetTileComponent(worldLayers[aimedLayerIndex + 1], targetPosition);
                     }
                     
-                    TileHarvest(tileComponent, aboveTileComponent);
+                    TileHarvest(targetPosition);
                 }
                 else
                 {
@@ -302,22 +302,34 @@ public class World : MonoBehaviour
         return spawned;
     }
 
-    void TileHarvest(TileBlock tile, TileBlock aboveTile)
+    bool TileHarvest(Vector3Int targetPosition)
     {
-        NonSolidBlock target = tile as NonSolidBlock;
-        if (target != null)
+        Tilemap targetLayer = worldLayers[aimedLayerIndex];
+        TileBlock baseTile = GetTileComponent(targetLayer, targetPosition);
+        TileBlock aboveTile = GetTileComponent(worldLayers[aimedLayerIndex + 1], targetPosition);
+
+        NonSolidBlock nonSolidTile = baseTile as NonSolidBlock;
+        if (nonSolidTile != null)
         {
-            (ItemType item, int amount) = target.GetItems(0, 0);
-            //Debug.Log($"A {target.type} dropped: {amount} of {item}");
-            GameManager.Instance.inventory.Add(item, amount);
-            GameManager.Instance.inventory.PrintInventory();
+            (ItemType item, int amount) = nonSolidTile.GetItems(0, 0);
+            if (GameManager.Instance.inventory.Add(item, amount))
+            {
+                if (nonSolidTile.DamageObject(1)) targetLayer.SetTile(targetPosition, null); // Damage the item and if depleted -> delete
+                GameManager.Instance.inventory.PrintInventory();
+                return true;
+            }
         }
         else if (aboveTile == null)
         {
-            GameManager.Instance.inventory.Add(tile.type, 1);
-            Destroy(tile.gameObject);
-            GameManager.Instance.inventory.PrintInventory();
+            if (GameManager.Instance.inventory.Add(baseTile.type, 1))
+            {
+                targetLayer.SetTile(targetPosition, null); // delete the block
+                GameManager.Instance.inventory.PrintInventory();
+                return true;
+            }
+            
         }
+        return false;
     }
 
 

@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 
     public Dictionary<TileBase, TileBase> mergeProgression = new Dictionary<TileBase, TileBase>();
 
-    public PlayerInventory inventory = new(6, 12, 16, 64);
+    public PlayerInventory inventory;
 
     private void Awake()
     {
@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         InitializeMergreProgression();
+        inventory.InitializePlayerInventory(6, 12, 16, 64);
     }
 
     void InitializeMergreProgression()

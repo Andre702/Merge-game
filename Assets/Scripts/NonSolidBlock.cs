@@ -27,8 +27,8 @@ public class NonSolidBlock : TileBlock
     }
 
     public List<ItemChance> possibleItemDrops;
-
-    public override bool IsSolid => false;
+    [HideInInspector] public override bool IsSolid => false;
+    public int durability;
 
     public override (bool canBePlaced, bool canBeMerged, Tilemap level, Vector3Int? position) PlaceVerify(Vector3Int selectedTile, Vector3 hitNormal, Tilemap selectedLayer, Tilemap aboveLayer = null)
     {
@@ -168,6 +168,14 @@ public class NonSolidBlock : TileBlock
         }
 
         return null;
+    }
+
+    public bool DamageObject(int damage)
+    {
+        durability -= damage;
+        if (durability <= 0) return true;
+
+        return false;
     }
 
     

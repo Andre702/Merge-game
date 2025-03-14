@@ -5,61 +5,28 @@ using System.Linq;
 using UnityEngine;
 
 [Serializable]
-public class InventorySlot<T>
+public class PlayerInventory : MonoBehaviour
 {
-    public T Type { get; private set; }
-    public int Count { get; private set; }
-    public int MaxStackSize { get; set; }
+    public GameObject slotPrefab;
+    public Transform itemInventory;
+    public Transform tileInventory;
 
-    public InventorySlot(T type, int count, int maxStackSize)
-    {
-        Type = type;
-        Count = count;
-        MaxStackSize = maxStackSize;
-    }
-
-    public bool CanStack(T type, int amount)
-    {
-        return Type.Equals(type) && (Count + amount) <= MaxStackSize;
-    }
-
-    public int AddItems(int amount)
-    {
-        int spaceLeft = MaxStackSize - Count;
-        int added = Math.Min(spaceLeft, amount);
-        Count += added;
-        return amount - added;
-    }
-
-    public int RemoveItems(int amount)
-    {
-        int removed = Math.Min(Count, amount);
-        Count -= removed;
-        return removed;
-    }
-
-    public bool IsEmpty() => Count == 0;
-}
-
-[Serializable]
-public class PlayerInventory
-{
-    public List<InventorySlot<TileType>> tileSlots { get; private set; }
-    public List<InventorySlot<ItemType>> itemSlots { get; private set; }
+    public List<InvSlot<TileType>> tileSlots { get; private set; }
+    public List<InvSlot<ItemType>> itemSlots { get; private set; }
     public int tileStackLimit { get; private set; }
     public int itemStackLimit { get; private set; }
     public int maxTileSlots { get; private set; }
     public int maxItemSlots { get; private set; }
 
-    public PlayerInventory(int maxTileSlots, int maxItemSlots, int tileStackLimit, int itemStackLimit)
+    public void InitializePlayerInventory(int maxTileSlots, int maxItemSlots, int tileStackLimit, int itemStackLimit)
     {
         this.maxTileSlots = maxTileSlots;
         this.maxItemSlots = maxItemSlots;
         this.tileStackLimit = tileStackLimit;
         this.itemStackLimit = itemStackLimit;
 
-        tileSlots = new List<InventorySlot<TileType>>();
-        itemSlots = new List<InventorySlot<ItemType>>();
+        tileSlots = new List<InvSlot<TileType>>();
+        itemSlots = new List<InvSlot<ItemType>>();
     }
 
     public void SaveInventory(string filename)
@@ -89,11 +56,11 @@ public class PlayerInventory
                 if (amount == 0) return true;
             }
         }
-        if (tileSlots.Count < maxTileSlots)
-        {
-            tileSlots.Add(new InventorySlot<TileType>(tile, amount, tileStackLimit));
-            return true;
-        }
+        //if (tileSlots.Count < maxTileSlots)
+        //{
+        //    tileSlots.Add(new InvSlot<TileType>(tile, amount, tileStackLimit, Instantiate(slotPrefab, tileInventory)));
+        //    return true;
+        //}
         return false;
     }
 
@@ -108,11 +75,11 @@ public class PlayerInventory
                 if (amount == 0) return true;
             }
         }
-        if (itemSlots.Count < maxItemSlots)
-        {
-            itemSlots.Add(new InventorySlot<ItemType>(item, amount, itemStackLimit));
-            return true;
-        }
+        //if (itemSlots.Count < maxItemSlots)
+        //{
+        //    itemSlots.Add(new InvSlot<ItemType>(item, amount, itemStackLimit, Instantiate(slotPrefab, itemInventory)));
+        //    return true;
+        //}
         return false;
     }
 
@@ -120,10 +87,10 @@ public class PlayerInventory
     {
         for (int i = 0; i < tileSlots.Count; i++)
         {
-            if (tileSlots[i].Type == tile)
+            if (tileSlots[i].type == tile)
             {
                 amount -= tileSlots[i].RemoveItems(amount);
-                if (tileSlots[i].IsEmpty()) tileSlots.RemoveAt(i);
+                if (tileSlots[i].IsEmpty()) tileSlots[i].ClearSlot();
                 if (amount <= 0) return true;
             }
         }
@@ -134,10 +101,10 @@ public class PlayerInventory
     {
         for (int i = 0; i < itemSlots.Count; i++)
         {
-            if (itemSlots[i].Type == item)
+            if (itemSlots[i].type == item)
             {
                 amount -= itemSlots[i].RemoveItems(amount);
-                if (itemSlots[i].IsEmpty()) itemSlots.RemoveAt(i);
+                if (itemSlots[i].IsEmpty()) itemSlots[i].ClearSlot();
                 if (amount <= 0) return true;
             }
         }
@@ -149,13 +116,13 @@ public class PlayerInventory
         Debug.Log("Tile Inventory:");
         foreach (var slot in tileSlots)
         {
-            Debug.Log($"{slot.Type}: {slot.Count}/{slot.MaxStackSize}");
+            Debug.Log($"{slot.type}: {slot.count}/{slot.maxStackSize}");
         }
 
         Debug.Log("Item Inventory:");
         foreach (var slot in itemSlots)
         {
-            Debug.Log($"{slot.Type}: {slot.Count}/{slot.MaxStackSize}");
+            Debug.Log($"{slot.type}: {slot.count}/{slot.maxStackSize}");
         }
     }
 }
